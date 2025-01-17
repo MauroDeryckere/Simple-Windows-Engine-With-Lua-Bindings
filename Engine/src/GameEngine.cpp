@@ -62,9 +62,9 @@ GameEngine::GameEngine(std::string const& engineResourcePath):
 	}
 
 	// Check if the resource path is set correctly and if the required files eixst (debug only)
-	assert(std::filesystem::exists(engineResourcePath + "/big.ico"));
-	assert(std::filesystem::exists(engineResourcePath + "/small.ico"));
-	assert(std::filesystem::exists(engineResourcePath + "/game.rc" ));
+	assert(std::filesystem::exists(engineResourcePath + "big.ico"));
+	assert(std::filesystem::exists(engineResourcePath + "small.ico"));
+	assert(std::filesystem::exists(engineResourcePath + "game.rc" ));
 
 	InitializeLua();
 }

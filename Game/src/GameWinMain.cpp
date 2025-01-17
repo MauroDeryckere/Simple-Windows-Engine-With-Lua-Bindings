@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------
 // Create GAME_ENGINE global (singleton) object and pointer
 //-----------------------------------------------------------------
-GameEngine myGameEngine{"../Engine/Resources"};
+GameEngine myGameEngine{"../Engine/Resources/"};
 GameEngine* GAME_ENGINE{ &myGameEngine };
 
 //-----------------------------------------------------------------
