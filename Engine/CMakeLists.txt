@@ -29,19 +29,16 @@ fetchcontent_makeavailable(SOL2)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE liblua sol2)
 
-# Copy resources to output folder
-set(RESOURCES_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
-file(GLOB_RECURSE RESOURCE_FILES
-    "${RESOURCES_SOURCE_DIR}/*.ico"
-    "${RESOURCES_SOURCE_DIR}/*.rc"
+# Define the resources folder and output directory
+set(RESOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+set(RESOURCES_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/resources")
+
+# Post-build command to copy resources
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${RESOURCES_DIR}  # Source resources folder
+        ${RESOURCES_OUT_DIR}  # Destination output folder
 )
-set(RESOURCES_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/resources/")
-file(MAKE_DIRECTORY ${RESOURCES_OUT_DIR})
-foreach(RESOURCE ${RESOURCE_FILES})
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${RESOURCE}
-    ${RESOURCES_OUT_DIR})
-endforeach(RESOURCE)
 
 # Post-build message
 message(STATUS "Engine build complete. Resources copied to ${RESOURCES_OUT_DIR}.")

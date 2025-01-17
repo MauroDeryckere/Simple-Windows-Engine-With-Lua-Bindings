@@ -1122,15 +1122,30 @@ void GameEngine::SetFont(Font* fontPtr)
 void GameEngine::InitializeLua()
 {
 	sol::state lua;
-	lua.open_libraries(sol::lib::base, sol::lib::math);
+	// Open libraries used in Lua
+	lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::io);
 
-	// Bind some C++ functionality to Lua
-	lua.set_function("print_message", [](const std::string& msg) 
-		{
-			std::cout << "Lua says: " << msg << std::endl;
-		});
+	// Expose GameEngine class and its methods to Lua
+	lua.new_usertype<GameEngine>("GameEngine",
+		"SetTitle", &GameEngine::SetTitle
+		// Expose other methods...
+	);
 
-	lua.script("print_message('Hello from Lua!')");
+	// Create an instance of GameEngine in Lua
+	lua["game_engine"] = this;
+
+	std::string const scriptPath = { "resources/default_game.lua" };
+	assert(std::filesystem::exists(scriptPath));
+
+	// Load the Lua script
+	try 
+	{
+		lua.script_file(scriptPath); //Execute the Lua script
+	}
+	catch (const std::exception& e) 
+	{
+		std::cerr << "Error initializing Lua: " << e.what() << std::endl;
+	}
 }
 
 LRESULT GameEngine::HandleEvent(HWND hWindow, UINT msg, WPARAM wParam, LPARAM lParam)
