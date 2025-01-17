@@ -15,9 +15,8 @@
 #include <tchar.h>			// used for unicode strings
 
 #include <vector>			// using std::vector for tab control logic
-
 #include <filesystem>
-#include <sol/sol.hpp>		// Used for lua
+#include <cassert>
 
 using namespace std;
 
@@ -65,8 +64,6 @@ GameEngine::GameEngine(std::string const& engineResourcePath):
 	assert(std::filesystem::exists(engineResourcePath + "big.ico"));
 	assert(std::filesystem::exists(engineResourcePath + "small.ico"));
 	assert(std::filesystem::exists(engineResourcePath + "game.rc" ));
-
-	InitializeLua();
 }
 
 GameEngine::~GameEngine()
@@ -1117,35 +1114,6 @@ void GameEngine::SetColor(COLORREF color)
 void GameEngine::SetFont(Font* fontPtr)
 {
 	m_FontDraw = fontPtr->GetHandle();
-}
-
-void GameEngine::InitializeLua()
-{
-	sol::state lua;
-	// Open libraries used in Lua
-	lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::io);
-
-	// Expose GameEngine class and its methods to Lua
-	lua.new_usertype<GameEngine>("GameEngine",
-		"SetTitle", &GameEngine::SetTitle
-		// Expose other methods...
-	);
-
-	// Create an instance of GameEngine in Lua
-	lua["game_engine"] = this;
-
-	std::string const scriptPath = { "resources/default_game.lua" };
-	assert(std::filesystem::exists(scriptPath));
-
-	// Load the Lua script
-	try 
-	{
-		lua.script_file(scriptPath); //Execute the Lua script
-	}
-	catch (const std::exception& e) 
-	{
-		std::cerr << "Error initializing Lua: " << e.what() << std::endl;
-	}
 }
 
 LRESULT GameEngine::HandleEvent(HWND hWindow, UINT msg, WPARAM wParam, LPARAM lParam)

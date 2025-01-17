@@ -51,6 +51,8 @@ public:
 	void CallAction			(Caller* callerPtr)											override;
 
 private:
+	void InitializeLua();
+
 	// -------------------------
 	// Datamembers
 	// -------------------------

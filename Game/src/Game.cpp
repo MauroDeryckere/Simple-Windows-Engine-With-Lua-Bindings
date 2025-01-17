@@ -7,6 +7,8 @@
 // Include Files
 //-----------------------------------------------------------------
 #include "Game.h"
+#include <sol/sol.hpp>		// Used for lua
+#include <filesystem>
 
 //-----------------------------------------------------------------
 // Game Member Functions																				
@@ -25,9 +27,8 @@ Game::~Game()
 void Game::Initialize()			
 {
 	// Code that needs to execute (once) at the start of the game, before the game window is created
-
 	AbstractGame::Initialize();
-	GAME_ENGINE->SetTitle(_T("Game Engine version 8_01"));	
+	GAME_ENGINE->SetTitle(_T("Simple Lua Game"));	
 	
 	GAME_ENGINE->SetWidth(1024);
 	GAME_ENGINE->SetHeight(768);
@@ -39,6 +40,10 @@ void Game::Initialize()
 	//buffer << (char) VK_LEFT;
 	//buffer << (char) VK_RIGHT;
 	//GAME_ENGINE->SetKeyList(buffer.str());
+
+	InitializeLua();
+
+	
 }
 
 void Game::Start()
@@ -146,6 +151,36 @@ void Game::CallAction(Caller* callerPtr)
 	// Insert the code that needs to execute when a Caller (= Button, TextBox, Timer, Audio) executes an action
 }
 
+void Game::InitializeLua()
+{
+	sol::state lua;
+	// Open libraries used in Lua
+	lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::io);
 
+	// Expose GameEngine class and its methods to Lua
+	lua.new_usertype<GameEngine>("GameEngine",
+		"SetTitle", &GameEngine::SetTitle,
+		"SetWidth", &GameEngine::SetWidth,
+		"SetHeight", &GameEngine::SetHeight,
+		"SetFrameRate", &GameEngine::SetFrameRate,
+		"SetKeyList", &GameEngine::SetKeyList
+	);
 
+	lua.new_usertype<Game>("Game");
+	
+	// Create an instance of GameEngine in Lua
+	lua["game_engine"] = GAME_ENGINE;
 
+	std::string const scriptPath = { "resources/default_game.lua" };
+	assert(std::filesystem::exists(scriptPath));
+
+	// Load the Lua script
+	try
+	{
+		lua.script_file(scriptPath); //Execute the Lua script
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Error initializing Lua: " << e.what() << std::endl;
+	}
+}

@@ -15,7 +15,7 @@ if (WIN32)
 endif()
 
 
-# fetch lua an SOL 2
+# fetch lua adn SOL 2
 include(fetchcontent)
 fetchcontent_declare(Lua
    GIT_REPOSITORY https://github.com/OneLuaPro/lua.git
@@ -27,7 +27,7 @@ fetchcontent_declare(SOL2
    GIT_TAG v3.3.0)
 fetchcontent_makeavailable(SOL2)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE liblua sol2)
+target_link_libraries(${PROJECT_NAME} PUBLIC liblua sol2)
 
 # Define the resources folder and output directory
 set(RESOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
@@ -36,8 +36,8 @@ set(RESOURCES_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/resources")
 # Post-build command to copy resources
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${RESOURCES_DIR}  # Source resources folder
-        ${RESOURCES_OUT_DIR}  # Destination output folder
+            ${RESOURCES_DIR}  # Source resources folder
+            ${RESOURCES_OUT_DIR}  # Destination output folder
 )
 
 # Post-build message

@@ -15,7 +15,7 @@
 void AbstractGame::Initialize()
 {
 	// Set required values
-	GAME_ENGINE->SetTitle(_T("Game Engine version 8_01"));
+	GAME_ENGINE->SetTitle(_T("Simple Lua Game"));
 
 	// Set optional values
 	GAME_ENGINE->SetWidth(640);
