@@ -1,15 +1,13 @@
+project(Engine)
+
 # Source files
-set(SOURCES
+set(ENGINE_SOURCES
     "src/AbstractGame.cpp"
-    "src/Game.cpp"
     "src/GameEngine.cpp"
     "src/GameWinMain.cpp"
 )
 
-# Create the executable
-add_executable(${PROJECT_NAME}
-	           ${SOURCES}
-)
+add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})
 
 # Ensure Unicode and WinMain entry point for Windows
 if (WIN32)
@@ -30,7 +28,6 @@ fetchcontent_declare(SOL2
 fetchcontent_makeavailable(SOL2)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE liblua sol2)
-
 
 # Copy resources to output folder
 set(RESOURCES_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
