@@ -148,7 +148,9 @@ public:
 	void		TabPrevious			(HWND ChildWindow)		const;
 		
 private:
-	// Private Member Functions	
+	// Private Member Functions
+	void InitializeLua();
+
 	LRESULT     HandleEvent			(HWND hWindow, UINT msg, WPARAM wParam, LPARAM lParam);
 	bool        CreateGameWindow	(int cmdShow);
 	void		MonitorKeyboard		();

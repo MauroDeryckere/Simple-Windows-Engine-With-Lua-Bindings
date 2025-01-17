@@ -16,6 +16,8 @@
 
 #include <vector>			// using std::vector for tab control logic
 
+#include <sol/sol.hpp>		// Used for lua
+
 using namespace std;
 
 //-----------------------------------------------------------------
@@ -35,6 +37,29 @@ GameEngine::GameEngine()
 	// start GDI+ 
 	Gdiplus::GdiplusStartupInput gpStartupInput{};
 	Gdiplus::GdiplusStartup(&m_GDIPlusToken, &gpStartupInput, NULL);
+
+	if (AllocConsole())
+	{
+		// Redirect STDOUT to the console
+		FILE* fp;
+		freopen_s(&fp, "CONOUT$", "w", stdout);
+		setvbuf(stdout, NULL, _IONBF, 0);
+
+		// Redirect STDERR to the console
+		freopen_s(&fp, "CONOUT$", "w", stderr);
+		setvbuf(stderr, NULL, _IONBF, 0);
+
+		// Redirect STDIN to the console
+		freopen_s(&fp, "CONIN$", "r", stdin);
+		setvbuf(stdin, NULL, _IONBF, 0);
+
+		// Sync C++ streams with the console
+		std::ios::sync_with_stdio(true);
+
+		std::cout << "Allocated console window\n";
+	}
+
+	InitializeLua();
 }
 
 GameEngine::~GameEngine()
@@ -1085,6 +1110,20 @@ void GameEngine::SetColor(COLORREF color)
 void GameEngine::SetFont(Font* fontPtr)
 {
 	m_FontDraw = fontPtr->GetHandle();
+}
+
+void GameEngine::InitializeLua()
+{
+	sol::state lua;
+	lua.open_libraries(sol::lib::base, sol::lib::math);
+
+	// Bind some C++ functionality to Lua
+	lua.set_function("print_message", [](const std::string& msg) 
+		{
+			std::cout << "Lua says: " << msg << std::endl;
+		});
+
+	lua.script("print_message('Hello from Lua!')");
 }
 
 LRESULT GameEngine::HandleEvent(HWND hWindow, UINT msg, WPARAM wParam, LPARAM lParam)
