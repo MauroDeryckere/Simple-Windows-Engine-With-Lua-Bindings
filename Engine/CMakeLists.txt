@@ -2,18 +2,18 @@ project(Engine)
 
 # Source files
 set(ENGINE_SOURCES
-    "src/AbstractGame.cpp"
     "src/GameEngine.cpp"
-    "src/GameWinMain.cpp"
+    "src/AbstractGame.cpp"
 )
 
 add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})
 
 # Ensure Unicode and WinMain entry point for Windows
 if (WIN32)
-    target_compile_definitions(Engine PRIVATE UNICODE _UNICODE)
-    target_link_options(Engine PRIVATE "/SUBSYSTEM:WINDOWS" "/ENTRY:wWinMainCRTStartup")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE UNICODE _UNICODE)
+    target_link_options(${PROJECT_NAME} PRIVATE "/SUBSYSTEM:WINDOWS" "/ENTRY:wWinMainCRTStartup")
 endif()
+
 
 # fetch lua an SOL 2
 include(fetchcontent)
@@ -44,4 +44,4 @@ foreach(RESOURCE ${RESOURCE_FILES})
 endforeach(RESOURCE)
 
 # Post-build message
-message(STATUS "Build complete. Resources copied to ${RESOURCES_OUT_DIR}.")
+message(STATUS "Engine build complete. Resources copied to ${RESOURCES_OUT_DIR}.")
