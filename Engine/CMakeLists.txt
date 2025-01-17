@@ -11,21 +11,26 @@ add_executable(${PROJECT_NAME}
 	           ${SOURCES}
 )
 
-
 # Ensure Unicode and WinMain entry point for Windows
 if (WIN32)
     target_compile_definitions(Engine PRIVATE UNICODE _UNICODE)
     target_link_options(Engine PRIVATE "/SUBSYSTEM:WINDOWS" "/ENTRY:wWinMainCRTStartup")
 endif()
 
+# fetch lua an SOL 2
+include(fetchcontent)
+fetchcontent_declare(Lua
+   GIT_REPOSITORY https://github.com/OneLuaPro/lua.git
+   GIT_TAG main)
+fetchcontent_makeavailable(Lua)
 
-# only needed if header files are not in same directory as source files
-# target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+fetchcontent_declare(SOL2
+   GIT_REPOSITORY https://github.com/ThePhD/sol2.git
+   GIT_TAG v3.3.0)
+fetchcontent_makeavailable(SOL2)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE liblua sol2)
 
-# Add libraries or dependencies - TODO
-# find_library(NAME file.lib)
-# target_link_libraries(Engine PRIVATE <library_name>)
 
 # Copy resources to output folder
 set(RESOURCES_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
@@ -40,3 +45,6 @@ foreach(RESOURCE ${RESOURCE_FILES})
     COMMAND ${CMAKE_COMMAND} -E copy ${RESOURCE}
     ${RESOURCES_OUT_DIR})
 endforeach(RESOURCE)
+
+# Post-build message
+message(STATUS "Build complete. Resources copied to ${RESOURCES_OUT_DIR}.")
