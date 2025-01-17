@@ -58,7 +58,7 @@ class GameEngine
 
 public:
 	// Constructor and Destructor
-	GameEngine();
+	GameEngine(std::string const& engineResourcePath);
 	virtual ~GameEngine();
 
 	// Disabling copy/move constructors and assignment operators   
@@ -163,6 +163,8 @@ private:
 	POINT		AngleToPoint		(int left, int top, int right, int bottom, int angle)	const;
 
 	// Member Variables
+	std::string const m_ResourcePath{"NONE"};
+
 	HINSTANCE           m_Instance			{};
 	HWND                m_Window			{};
 	tstring				m_Title				{};

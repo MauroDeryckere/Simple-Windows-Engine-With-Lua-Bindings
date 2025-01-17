@@ -16,6 +16,7 @@
 
 #include <vector>			// using std::vector for tab control logic
 
+#include <filesystem>
 #include <sol/sol.hpp>		// Used for lua
 
 using namespace std;
@@ -32,7 +33,8 @@ LRESULT CALLBACK WndProc(HWND hWindow, UINT msg, WPARAM wParam, LPARAM lParam)
 //-----------------------------------------------------------------
 // GameEngine Constructor(s)/Destructor
 //-----------------------------------------------------------------
-GameEngine::GameEngine()
+GameEngine::GameEngine(std::string const& engineResourcePath):
+	m_ResourcePath{engineResourcePath}
 {
 	// start GDI+ 
 	Gdiplus::GdiplusStartupInput gpStartupInput{};
@@ -58,6 +60,11 @@ GameEngine::GameEngine()
 
 		std::cout << "Allocated console window\n";
 	}
+
+	// Check if the resource path is set correctly and if the required files eixst (debug only)
+	assert(std::filesystem::exists(engineResourcePath + "/big.ico"));
+	assert(std::filesystem::exists(engineResourcePath + "/small.ico"));
+	assert(std::filesystem::exists(engineResourcePath + "/game.rc" ));
 
 	InitializeLua();
 }
