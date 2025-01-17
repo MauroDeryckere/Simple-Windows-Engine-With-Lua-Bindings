@@ -7,5 +7,5 @@ project(Engine)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add the Engine sub directoru
+# Add the Engine sub directory
 add_subdirectory(Engine)
