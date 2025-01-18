@@ -192,6 +192,20 @@ function Paint(r)
         game_engine:FillOval(oval)
     end
 
+    if is_paused then
+        local _text = "GAME PAUSED"
+        local _string_x = math.floor((config.screen_width - 11 * 25) / 2)
+        local _string_y = math.floor((config.screen_height - 400) / 2)
+        local stringInfo = { 
+            text = _text,
+            string_x = _string_x,
+            string_y = _string_y
+        }
+        game_engine:DrawString(stringInfo) 
+
+        return
+    end
+
     -- Game over display
     if game_over then
         local _text = "GAME OVER"
