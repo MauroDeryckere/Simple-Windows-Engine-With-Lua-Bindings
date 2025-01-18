@@ -14,35 +14,46 @@ game_engine:SetWidth(config.screen_width)
 game_engine:SetHeight(config.screen_height)
 game_engine:SetFrameRate(config.frame_rate)
 
+-- TODO: set key list
+
+
 -- Gameplay variables
 local game_over = false
 
 -- Functions called by the engine
 function Tick()
+    snake:move()
+
+
     if game_over then 
         return
     end
 
-    game_over = true
+
+    -- game_over = true
 end
 
 function Paint(r)
-    game_engine:SetColor(255)
+    -- Clear sreen
+    game_engine:SetColor(0)
+    game_engine:FillRect(r)
 
     local window_left = r.left
-    local winddow_top = r.top
+    local window_top = r.top
     local window_right = r.right
-    local wiindow_bottom = r.bottom
+    local window_bottom = r.bottom
+    game_engine:SetColor(255)
 
-    local rect = 
-    { 
-        left = window_left + 100, 
-        top = winddow_top - 100, 
-        right = window_right - 200,
-        bottom = wiindow_bottom + 200 
-    
-    }
-    game_engine:FillRect(rect)
+    -- Draw the snake
+    for _, segment in ipairs(snake.body) do
+        local rect = { 
+            left = window_left + segment.x * config.grid_size, 
+            top = window_top + segment.y * config.grid_size, 
+            right = window_left + (segment.x + 1) * config.grid_size, 
+            bottom = window_top + (segment.y + 1) * config.grid_size 
+        }
+        game_engine:FillRect(rect)
+    end
 end
 
 function KeyPressed(key)
