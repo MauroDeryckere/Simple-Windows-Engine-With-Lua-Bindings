@@ -230,7 +230,17 @@ void Game::InitializeLua()
 
 			auto const result = self.FillRect(left, top, right, bottom);
 			assert(result);
-		});
+		}, 
+		"DrawRect", [](GameEngine const& self, sol::table rect) {
+			uint32_t const left = rect["left"];
+			uint32_t const top = rect["top"];
+			uint32_t const right = rect["right"];
+			uint32_t const bottom = rect["bottom"];
+
+			auto const result = self.DrawRect(left, top, right, bottom);
+			assert(result);
+		}
+	);
 
 	m_LuaState.new_usertype<Game>("Game");
 	

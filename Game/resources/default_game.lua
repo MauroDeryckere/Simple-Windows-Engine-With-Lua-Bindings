@@ -1,6 +1,7 @@
 -- default_game.lua 
 -- -> Game: Snake
 
+print(_VERSION)
 print("Lua package.path:", package.path, "\n\n")
 
 -- File setup
@@ -80,7 +81,16 @@ function CheckKeyboard()
     end
 end
 
+local function makeColor(r, g, b)
+    return (b << 16) | (g << 8) | r
+end
+
 function Paint(r)
+    local RED =  makeColor(255, 0, 0)
+    local LIGHT_RED =  makeColor(100, 10, 10)
+    local GREEN = makeColor(30, 200, 10)
+    local BROWN = makeColor(165, 42, 42)
+    
     -- Clear sreen
     game_engine:SetColor(0)
     game_engine:FillRect(r)
@@ -89,17 +99,41 @@ function Paint(r)
     local window_top = r.top
     local window_right = r.right
     local window_bottom = r.bottom
-    game_engine:SetColor(255)
+
+    -- Draw the map
+    game_engine:SetColor(LIGHT_RED)
+    -- Loop through each cell in the grid
+    for x = 0, config.hor_cells - 1 do  -- Assuming grid width is config.grid_width
+        for y = 0, config.ver_cells - 1 do  -- Assuming grid height is config.grid_height
+            -- Calculate the rectangle coordinates for the cell at (x, y)
+            local cell = { 
+                left = window_left + x * config.grid_size, 
+                top = window_top + y * config.grid_size, 
+                right = window_left + (x + 1) * config.grid_size, 
+                bottom = window_top + (y + 1) * config.grid_size
+            }
+            -- Draw the rectangle for the current cell
+            game_engine:DrawRect(cell)
+        end
+    end
+    game_engine:SetColor(RED)
+    game_engine:DrawRect(r)
+
+
+    game_engine:SetColor(GREEN)
 
     local body = snake:getBody()
     -- Draw the snake
-    body:iterate(function(segment)
+    body:iterate(function(segment, index)
         local rect = { 
             left = window_left + segment.x * config.grid_size + 1, 
             top = window_top + segment.y * config.grid_size + 1, 
             right = window_left + (segment.x + 1) * config.grid_size - 2, 
             bottom = window_top + (segment.y + 1) * config.grid_size - 2
         }
+        if index == body.last then  
+            game_engine:SetColor(BROWN)
+        end
         game_engine:FillRect(rect)
     end)
 end

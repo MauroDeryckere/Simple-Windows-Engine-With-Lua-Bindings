@@ -24,9 +24,11 @@ keybinds = {
 }
 
 return {
-	grid_size = 20,
-	screen_width = 1024,
-	screen_height = 768,
+    hor_cells = 20,
+    ver_cells = 15,
+	grid_size = 50,
+	screen_width = 1000,
+	screen_height = 750,
 	frame_rate = 60,
 	game_speed = 10
 }
