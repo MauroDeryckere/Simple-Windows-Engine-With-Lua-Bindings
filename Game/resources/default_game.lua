@@ -5,11 +5,13 @@ print(_VERSION)
 print("Lua package.path:", package.path, "\n\n")
 
 -- File setup
+-- @type Config
 local config = require("config")
+-- @type Snake
 local snake = require("snake")
+-- @type Food
 local food = require("food")
 
-local frame_ct = 0
 
 -- Set up the game engine
 -- @type GameEngine
@@ -24,8 +26,10 @@ game_engine:SetKeyList(string.char(keybinds.pause))
 -- Gameplay variables
 -- @var boolean game_over Indicates if the game is over
 -- @var boolean is_paused Indicates if the game is paused
+-- @var number frame_ct Cooldown to delay player movement and other updates (related to game_speed in config file)
 local game_over = false
 local is_paused = false
+local frame_ct = 0
 
 -- @return void
 local function Start_Game()
