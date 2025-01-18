@@ -56,5 +56,5 @@ private:
 	// -------------------------
 	// Datamembers
 	// -------------------------
-	sol::state m_LuaState{};
+	mutable sol::state m_LuaState{};
 };

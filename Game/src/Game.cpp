@@ -42,8 +42,6 @@ void Game::Initialize()
 	//GAME_ENGINE->SetKeyList(buffer.str());
 
 	InitializeLua();
-
-	
 }
 
 void Game::Start()
@@ -58,7 +56,25 @@ void Game::End()
 
 void Game::Paint(RECT rect) const
 {
-	// Insert paint code
+	// rect == game window rect, need to base all locations off of this
+	if (m_LuaState["Paint"].valid()) 
+	{
+		// Create a Lua table for the RECT equivalent
+		sol::table luaRect{ m_LuaState.create_table() };
+		luaRect["left"] = rect.left;
+		luaRect["right"] = rect.right;
+		luaRect["top"] = rect.top;
+		luaRect["bottom"] = rect.bottom;
+
+		try 
+		{
+			m_LuaState["Paint"](luaRect);
+		}
+		catch (const std::exception& e) 
+		{
+			std::cerr << "Error in Lua Paint function: " << e.what() << "\n";
+		}
+	}
 }
 
 void Game::Tick()
@@ -170,15 +186,24 @@ void Game::InitializeLua()
 	//Set Lua's package.path to include the "resources" folder
 	std::string const luaPath{ "resources/?.lua;resources/?/init.lua;" };
 	m_LuaState["package"]["path"] = luaPath;
-
+	
 	// Expose GameEngine class and its methods to Lua
 	m_LuaState.new_usertype<GameEngine>("GameEngine",
 		"SetTitle", &GameEngine::SetTitle,
 		"SetWidth", &GameEngine::SetWidth,
 		"SetHeight", &GameEngine::SetHeight,
 		"SetFrameRate", &GameEngine::SetFrameRate,
-		"SetKeyList", &GameEngine::SetKeyList
-	);
+		"SetKeyList", &GameEngine::SetKeyList,
+		"SetColor", &GameEngine::SetColor,
+		"FillRect", [](GameEngine const& self, sol::table rect) {
+			uint32_t const left = rect["left"];
+			uint32_t const top = rect["top"];
+			uint32_t const right = rect["right"];
+			uint32_t const bottom = rect["bottom"];
+
+			auto const result = self.FillRect(left, top, right, bottom);
+			assert(result);
+		});
 
 	m_LuaState.new_usertype<Game>("Game");
 	
