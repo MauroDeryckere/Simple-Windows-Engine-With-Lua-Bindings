@@ -12,6 +12,7 @@ local food = require("food")
 local frame_ct = 0
 
 -- Set up the game engine
+-- @type GameEngine
 game_engine:SetTitle("Lua powered Snake Game")
 game_engine:SetWidth(config.screen_width)
 game_engine:SetHeight(config.screen_height)
@@ -21,9 +22,12 @@ game_engine:SetFrameRate(config.frame_rate)
 game_engine:SetKeyList(string.char(keybinds.pause))
 
 -- Gameplay variables
+-- @var boolean game_over Indicates if the game is over
+-- @var boolean is_paused Indicates if the game is paused
 local game_over = false
 local is_paused = false
 
+-- @return void
 local function Start_Game()
     snake:init()
     food:init(config)
@@ -32,6 +36,8 @@ end
 Start_Game()
 
 -- Functions called by the engine
+-- @return void
+-- The Tick function is called on each frame from the engine to update game state
 function Tick()
     if is_paused then 
         return
@@ -66,6 +72,8 @@ function Tick()
     end
 end
 
+-- @return void
+-- The CheckKeyboard function checks if any movement keys are pressed
 function CheckKeyboard()
     if game_over then
         return
@@ -89,10 +97,18 @@ function CheckKeyboard()
     end
 end
 
+-- @param r number Red aspect of RGB colour
+-- @param g number Green aspect of RGB colour
+-- @param b number Blue aspect of RGB colour
+-- @return void
+-- The makeColor function creates a color from the RGB values
 local function makeColor(r, g, b)
     return (b << 16) | (g << 8) | r
 end
-
+    
+-- @param r rect The rectangle defining the render area
+-- @return void
+-- The Paint function is responsible for drawing the game scene
 function Paint(r)
     local RED =  makeColor(255, 0, 0)
     local LIGHT_RED =  makeColor(100, 10, 10)
@@ -159,6 +175,9 @@ function Paint(r)
     end
 end
 
+-- @param key char The key that was pressed
+-- @return void
+-- KeyPressed function handles any actions that have to happen when a key is released
 function KeyPressed(key)
     print(key)
 

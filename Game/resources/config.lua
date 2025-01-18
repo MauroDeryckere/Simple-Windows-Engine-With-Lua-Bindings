@@ -1,5 +1,7 @@
 -- config.lua
 
+-- @type table<{number}>
+-- A table mapping keys to their virtual key codes
 KEY_CODES = {
     W = 0x57,         -- Virtual key code for 'W'
     A = 0x41,         -- Virtual key code for 'A'
@@ -14,7 +16,8 @@ KEY_CODES = {
     ESC = 0x1B        -- Virtual key code for 'Escape'
 }
 
--- Default keybinds for actions
+-- @type table<{number}>
+-- Default keybinds for actions mapped to virtual key codes
 keybinds = {
     moveUp = KEY_CODES.UP,
     moveDown = KEY_CODES.DOWN,
@@ -23,6 +26,15 @@ keybinds = {
     pause = KEY_CODES.SPACE
 }
 
+-- @type table
+-- Configuration settings for the game
+-- @field hor_cells number The number of horizontal cells in the game grid
+-- @field ver_cells number The number of vertical cells in the game grid
+-- @field grid_size number The size of each grid cell
+-- @field screen_width number The width of the game screen in pixels
+-- @field screen_height number The height of the game screen in pixels
+-- @field frame_rate number The number of frames per second
+-- @field game_speed number The speed of the game (lower value = faster)
 return {
     hor_cells = 20,
     ver_cells = 15,
