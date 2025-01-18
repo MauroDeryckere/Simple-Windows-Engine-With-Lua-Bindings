@@ -142,6 +142,19 @@ void Game::CheckKeyboard()
 	if (GAME_ENGINE->IsKeyDown(_T('M'))) xIcon += xSpeed;
 	if (GAME_ENGINE->IsKeyDown(_T('O'))) yIcon -= ySpeed;
 	*/
+
+	// Call Lua script's tick function if it exists
+	if (m_LuaState["CheckKeyboard"].valid())
+	{
+		try
+		{
+			m_LuaState["CheckKeyboard"]();
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Error in Lua Check Keyboard function: " << e.what() << "\n";
+		}
+	}
 }
 
 void Game::KeyPressed(TCHAR key)
@@ -194,6 +207,7 @@ void Game::InitializeLua()
 		"SetHeight", &GameEngine::SetHeight,
 		"SetFrameRate", &GameEngine::SetFrameRate,
 		"SetKeyList", &GameEngine::SetKeyList,
+		"IsKeyDown", &GameEngine::IsKeyDown,
 		"SetColor", &GameEngine::SetColor,
 		"FillRect", [](GameEngine const& self, sol::table rect) {
 			uint32_t const left = rect["left"];

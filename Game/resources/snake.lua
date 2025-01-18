@@ -16,9 +16,9 @@ function snake:move()
     local old_head = Body:getBack()
     Body:enqueue({ x = old_head.x + self.direction.x, y = old_head.y + self.direction.y})
 
-   -- if not self.did_grow then
-    Body:dequeue()
-    -- end
+    if not self.did_grow then
+        Body:dequeue()
+    end
         
     self.did_grow = false
 
