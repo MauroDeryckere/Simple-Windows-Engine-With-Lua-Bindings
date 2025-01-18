@@ -52,7 +52,7 @@ function Tick()
     snake.did_grow = true -- temporarily hard coded to grow indefinitely
     snake:move()
 
-    result = snake:checkCollisionSelf()
+    result = snake:checkCollision(config)
     if result then
         game_over = true
     end
