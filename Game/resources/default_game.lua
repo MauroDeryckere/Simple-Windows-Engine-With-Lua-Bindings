@@ -47,10 +47,10 @@ function Paint(r)
     -- Draw the snake
     for _, segment in ipairs(snake.body) do
         local rect = { 
-            left = window_left + segment.x * config.grid_size, 
-            top = window_top + segment.y * config.grid_size, 
-            right = window_left + (segment.x + 1) * config.grid_size, 
-            bottom = window_top + (segment.y + 1) * config.grid_size 
+            left = window_left + segment.x * config.grid_size + 1, 
+            top = window_top + segment.y * config.grid_size - 2, 
+            right = window_left + (segment.x + 1) * config.grid_size + 1, 
+            bottom = window_top + (segment.y + 1) * config.grid_size - 2
         }
         game_engine:FillRect(rect)
     end
