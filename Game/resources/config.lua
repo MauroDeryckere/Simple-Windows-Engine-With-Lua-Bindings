@@ -19,8 +19,8 @@ keybinds = {
     moveUp = KEY_CODES.UP,
     moveDown = KEY_CODES.DOWN,
     moveLeft = KEY_CODES.LEFT,
-    moveRight = KEY_CODES.RIGHT
-   --  pause = KEY_CODES.SPACE
+    moveRight = KEY_CODES.RIGHT,
+    pause = KEY_CODES.SPACE
 }
 
 return {

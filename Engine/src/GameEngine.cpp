@@ -390,6 +390,9 @@ void GameEngine::SetKeyList(const tstring& keyList)
 	// make keylist if needed
 	if (keyList.size() > 0)
 	{
+		tcout << "Set key list to: ";
+		tcout << keyList << "\n";
+
 		m_KeyListPtr = (TCHAR*)malloc((keyList.size() + 1) * sizeof(TCHAR)); // make place for this amount of keys + 1
 
 		for (int count{}; count < (int)keyList.size() + 1; ++count)

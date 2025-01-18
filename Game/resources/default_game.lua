@@ -16,10 +16,12 @@ game_engine:SetWidth(config.screen_width)
 game_engine:SetHeight(config.screen_height)
 game_engine:SetFrameRate(config.frame_rate)
 
-game_engine:SetKeyList("WASD")
+-- necessary to bind for key released event (otherwise pausing will not work as intended)
+game_engine:SetKeyList(string.char(keybinds.pause))
 
 -- Gameplay variables
 local game_over = false
+local is_paused = false
 
 local function Start_Game()
     snake:init()
@@ -29,6 +31,10 @@ Start_Game()
 
 -- Functions called by the engine
 function Tick()
+    if is_paused then 
+        return
+    end
+
     frame_ct = frame_ct + 1
     
     -- execute the rest of tick once per x amount of framees
@@ -48,6 +54,10 @@ end
 
 function CheckKeyboard()
     if game_over then
+        return
+    end
+    
+    if is_paused then 
         return
     end
 
@@ -90,5 +100,14 @@ function Paint(r)
 end
 
 function KeyPressed(key)
+    print(key)
 
-end
+    if key == string.char(keybinds.pause) then
+        if is_paused then
+            is_paused = false
+        else
+            print("PAUSED THE GAME! ")
+            is_paused = true
+        end 
+    end
+ end

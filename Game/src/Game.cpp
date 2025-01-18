@@ -158,7 +158,20 @@ void Game::CheckKeyboard()
 }
 
 void Game::KeyPressed(TCHAR key)
-{	
+{
+
+	// Call Lua script's key pressed function if it exists
+	if (m_LuaState["KeyPressed"].valid())
+	{
+		try
+		{
+			m_LuaState["KeyPressed"](key);
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Error in Lua Key Pressed function: " << e.what() << "\n";
+		}
+	}
 	// DO NOT FORGET to use SetKeyList() !!
 
 	// Insert code that needs to execute when a key is pressed
@@ -194,7 +207,7 @@ void Game::CallAction(Caller* callerPtr)
 void Game::InitializeLua()
 {
 	// Open libraries used in Lua
-	m_LuaState.open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::io, sol::lib::package);
+	m_LuaState.open_libraries(sol::lib::base, sol::lib::string, sol::lib::math, sol::lib::os, sol::lib::io, sol::lib::package);
 
 	//Set Lua's package.path to include the "resources" folder
 	std::string const luaPath{ "resources/?.lua;resources/?/init.lua;" };
