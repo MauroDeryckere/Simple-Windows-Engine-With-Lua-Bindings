@@ -47,10 +47,21 @@ function Tick()
 end
 
 function CheckKeyboard()
-    if game_engine:IsKeyDown(0x57) then  -- 0x57 is the virtual key code for 'W'
-        -- Perform action for when 'W' is pressed, e.g., move the snake up
-       -- snake:moveUp()  -- Example method for moving the snake up
-        game_over = true
+    if game_over then
+        return
+    end
+
+    if game_engine:IsKeyDown(keybinds.moveUp) then
+        snake:lookUp()
+    end
+    if game_engine:IsKeyDown(keybinds.moveDown) then
+        snake:lookDown()
+    end
+    if game_engine:IsKeyDown(keybinds.moveLeft) then
+        snake:lookLeft()
+    end
+    if game_engine:IsKeyDown(keybinds.moveRight) then
+        snake:lookRight()
     end
 end
 

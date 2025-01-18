@@ -17,11 +17,23 @@ function snake:move()
     Body:enqueue({ x = old_head.x + self.direction.x, y = old_head.y + self.direction.y})
 
     if not self.did_grow then
-        Body:dequeue()
+        Body:dequeue() -- remove tail if we did not grow this game frame
     end
         
     self.did_grow = false
+end
 
+function snake:lookUp()
+    self.direction = { x = 0, y = -1 }
+end
+function snake:lookDown()
+    self.direction = { x = 0, y = 1 }
+end
+function snake:lookLeft()
+    self.direction = { x = -1, y = 0 }
+end
+function snake:lookRight()
+    self.direction = { x = 1, y = 0 }
 end
 
 function snake:getBody()
