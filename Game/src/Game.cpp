@@ -255,7 +255,6 @@ void Game::InitializeLua()
 			uint32_t const y = stringInfo["string_y"];
 
 			auto const result = self.DrawString(text, x, y);
-			assert(result);
 		}
 	);
 

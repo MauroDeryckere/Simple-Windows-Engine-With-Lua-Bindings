@@ -26,7 +26,6 @@ game_engine:SetKeyList(string.char(keybinds.pause))
 -- Init font(s)
 -- idx, fontSize
 game:CreateTextFont(0, 50)
-game:SetFont(0)
 
 -- Gameplay variables
 -- @var boolean game_over Indicates if the game is over
@@ -38,6 +37,7 @@ local frame_ct = 0
 
 -- @return void
 local function Start_Game()
+    game:SetFont(0)
     snake:init()
     food:init(config)
 end
@@ -132,6 +132,7 @@ function Paint(r)
     local LIGHT_RED =  makeColor(100, 10, 10)
     local GREEN = makeColor(30, 200, 10)
     local BROWN = makeColor(165, 42, 42)
+    local WHITE = makeColor(255, 255, 255)
     local BLUE = makeColor(10, 20, 200)
     
     -- Clear sreen
@@ -192,11 +193,27 @@ function Paint(r)
         game_engine:FillOval(oval)
     end
 
+    game_engine:SetColor(WHITE)
+    game:SetFont(0)
+
+    _text = tostring(snake.score)
+    _string_x = 5
+    _string_y = 5
+
+    local stringInfo = { 
+        text = _text,
+        string_x = _string_x,
+        string_y = _string_y
+    }
+    game_engine:DrawString(stringInfo) 
+
+
+    game_engine:SetColor(BLUE)
     if is_paused then
-        local _text = "GAME PAUSED"
-        local _string_x = math.floor((config.screen_width - 11 * 25) / 2)
-        local _string_y = math.floor((config.screen_height - 400) / 2)
-        local stringInfo = { 
+        _text = "GAME PAUSED"
+        _string_x = math.floor((config.screen_width - 11 * 25) / 2)
+        _string_y = math.floor((config.screen_height - 400) / 2)
+        stringInfo = { 
             text = _text,
             string_x = _string_x,
             string_y = _string_y
