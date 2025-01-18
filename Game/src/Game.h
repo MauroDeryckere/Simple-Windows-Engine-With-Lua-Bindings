@@ -52,9 +52,12 @@ public:
 
 private:
 	void InitializeLua();
+	void CreateTextFont(uint32_t fontArrIdx, uint32_t fontSize);
+	void SetFont(uint32_t fontArrIdx);
 
 	// -------------------------
 	// Datamembers
 	// -------------------------
 	mutable sol::state m_LuaState{};
+	std::array<std::unique_ptr<Font>, 4> m_pFonts{}; //Max 4 fonts, can be increased or made dynamic if necessary but no need to do so for his project
 };

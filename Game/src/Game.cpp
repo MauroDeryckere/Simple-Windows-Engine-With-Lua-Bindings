@@ -248,14 +248,27 @@ void Game::InitializeLua()
 
 			auto const result = self.FillOval(left, top, right, bottom);
 			assert(result);
+		},
+		"DrawString", [](GameEngine const& self, sol::table stringInfo) {
+			std::wstring const text = stringInfo["text"];
+			uint32_t const x = stringInfo["string_x"];
+			uint32_t const y = stringInfo["string_y"];
+
+			auto const result = self.DrawString(text, x, y);
+			assert(result);
 		}
 	);
 
-
-	m_LuaState.new_usertype<Game>("Game");
+	m_LuaState.new_usertype<Game>("Game",
+		"CreateTextFont", &Game::CreateTextFont,
+		"SetFont", &Game::SetFont
+	);
 	
-	// Create an instance of GameEngine in Lua
+
+
+	// Create an instance of GameEngine and game in Lua
 	m_LuaState["game_engine"] = GAME_ENGINE;
+	m_LuaState["game"] = this;
 
 	std::string const scriptPath = { "resources/default_game.lua" };
 	assert(std::filesystem::exists(scriptPath));
@@ -269,4 +282,17 @@ void Game::InitializeLua()
 	{
 		std::cerr << "Error initializing Lua: " << e.what() << std::endl;
 	}
+}
+
+void Game::CreateTextFont(uint32_t fontArrIdx, uint32_t fontSize)
+{
+	assert(fontArrIdx < m_pFonts.size());
+	assert(std::filesystem::exists("resources/PressStart2P-vaV7.ttf"));
+	m_pFonts[fontArrIdx] = std::make_unique<Font>(L"resources/PressStart2P-vaV7.ttf", false, false, false, fontSize);
+}
+
+void Game::SetFont(uint32_t fontArrIdx)
+{
+	assert(fontArrIdx < m_pFonts.size());
+	GAME_ENGINE->SetFont(m_pFonts[fontArrIdx].get());
 }

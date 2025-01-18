@@ -23,6 +23,11 @@ game_engine:SetFrameRate(config.frame_rate)
 -- necessary to bind for key released event (otherwise pausing will not work as intended)
 game_engine:SetKeyList(string.char(keybinds.pause))
 
+-- Init font(s)
+-- idx, fontSize
+game:CreateTextFont(0, 50)
+game:SetFont(0)
+
 -- Gameplay variables
 -- @var boolean game_over Indicates if the game is over
 -- @var boolean is_paused Indicates if the game is paused
@@ -38,6 +43,12 @@ local function Start_Game()
 end
 
 Start_Game()
+
+-- @return void
+-- Called to rerstart game after game over
+local function rerstart_game()
+
+end
 
 -- Functions called by the engine
 -- @return void
@@ -177,6 +188,17 @@ function Paint(r)
         }
         game_engine:FillOval(oval)
     end
+
+    -- Game over display
+    if game_over then
+        local stringInfo = { 
+            text = "GAME OVER",
+            string_x = 2,
+            string_y = config.screen_height / 2
+        }
+        game_engine:DrawString(stringInfo)
+    end
+
 end
 
 -- @param key char The key that was pressed
@@ -186,11 +208,17 @@ function KeyPressed(key)
     print(key)
 
     if key == string.char(keybinds.pause) then
-        if is_paused then
-            is_paused = false
+        if game_over then
+            game_over = false
+            print("RERSTARTING THE GAME! ")
+            restart_game()
         else
-            print("PAUSED THE GAME! ")
-            is_paused = true
-        end 
+            if is_paused then
+                is_paused = false
+            else
+                print("PAUSED THE GAME! ")
+                is_paused = true
+            end 
+        end
     end
  end

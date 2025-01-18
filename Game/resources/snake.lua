@@ -77,10 +77,16 @@ function snake:checkCollision(config)
     local head = Body:getBack()
     local collision = false
     Body:iterate(function(segment, index)
+        if (segment.x < 0 or segment.x > config.hor_cells - 1 or segment.y < 0 or segment.y > config.ver_cells - 1) then
+            print("collision! GAME OVER")
+            collision = true
+        end
+
         if index == Body.last then
             return
         end
-        if (segment.x == head.x and segment.y == head.y) or (segment.x < 0 or segment.x > config.hor_cells - 1 or segment.y < 0 or segment.y > config.ver_cells - 1) then
+
+        if (segment.x == head.x and segment.y == head.y) then
             print("collision! GAME OVER")
             collision = true  -- Collision with body or borders
         end
