@@ -7,7 +7,6 @@
 // Include Files
 //-----------------------------------------------------------------
 #include "Game.h"
-#include <sol/sol.hpp>		// Used for lua
 #include <filesystem>
 
 //-----------------------------------------------------------------
@@ -24,10 +23,11 @@ Game::~Game()
 	// nothing to destroy
 }
 
-void Game::Initialize()			
+void Game::Initialize()		
 {
 	// Code that needs to execute (once) at the start of the game, before the game window is created
 	AbstractGame::Initialize();
+
 	GAME_ENGINE->SetTitle(_T("Simple Lua Game"));	
 	
 	GAME_ENGINE->SetWidth(1024);
@@ -58,12 +58,23 @@ void Game::End()
 
 void Game::Paint(RECT rect) const
 {
-	// Insert paint code 
+	// Insert paint code
 }
 
 void Game::Tick()
 {
-	// Insert non-paint code that needs to execute each tick 
+	// Call Lua script's tick function if it exists
+	if (m_LuaState["Tick"].valid())
+	{
+		try 
+		{
+			m_LuaState["Tick"]();
+		}
+		catch (const std::exception& e) 
+		{
+			std::cerr << "Error in Lua Tick function: " << e.what() << "\n";
+		}
+	}
 }
 
 void Game::MouseButtonAction(bool isLeft, bool isDown, int x, int y, WPARAM wParam)
@@ -153,12 +164,15 @@ void Game::CallAction(Caller* callerPtr)
 
 void Game::InitializeLua()
 {
-	sol::state lua;
 	// Open libraries used in Lua
-	lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::io);
+	m_LuaState.open_libraries(sol::lib::base, sol::lib::math, sol::lib::os, sol::lib::io, sol::lib::package);
+
+	//Set Lua's package.path to include the "resources" folder
+	std::string const luaPath{ "resources/?.lua;resources/?/init.lua;" };
+	m_LuaState["package"]["path"] = luaPath;
 
 	// Expose GameEngine class and its methods to Lua
-	lua.new_usertype<GameEngine>("GameEngine",
+	m_LuaState.new_usertype<GameEngine>("GameEngine",
 		"SetTitle", &GameEngine::SetTitle,
 		"SetWidth", &GameEngine::SetWidth,
 		"SetHeight", &GameEngine::SetHeight,
@@ -166,10 +180,10 @@ void Game::InitializeLua()
 		"SetKeyList", &GameEngine::SetKeyList
 	);
 
-	lua.new_usertype<Game>("Game");
+	m_LuaState.new_usertype<Game>("Game");
 	
 	// Create an instance of GameEngine in Lua
-	lua["game_engine"] = GAME_ENGINE;
+	m_LuaState["game_engine"] = GAME_ENGINE;
 
 	std::string const scriptPath = { "resources/default_game.lua" };
 	assert(std::filesystem::exists(scriptPath));
@@ -177,7 +191,7 @@ void Game::InitializeLua()
 	// Load the Lua script
 	try
 	{
-		lua.script_file(scriptPath); //Execute the Lua script
+		m_LuaState.script_file(scriptPath); //Execute the Lua script
 	}
 	catch (const std::exception& e)
 	{

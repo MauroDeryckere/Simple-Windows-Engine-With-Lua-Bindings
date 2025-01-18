@@ -12,7 +12,7 @@
 #include "Resource.h"	
 #include "GameEngine.h"
 #include "AbstractGame.h"
-
+#include <sol/sol.hpp>		// Used for lua
 //-----------------------------------------------------------------
 // Game Class																
 //-----------------------------------------------------------------
@@ -56,7 +56,5 @@ private:
 	// -------------------------
 	// Datamembers
 	// -------------------------
-
-
-
+	sol::state m_LuaState{};
 };
