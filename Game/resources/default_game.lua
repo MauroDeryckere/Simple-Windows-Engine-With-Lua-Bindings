@@ -35,6 +35,10 @@ function Tick()
         return
     end
 
+    if game_over then 
+        return
+    end
+
     frame_ct = frame_ct + 1
     
     -- execute the rest of tick once per x amount of framees
@@ -44,12 +48,13 @@ function Tick()
         return
     end
 
-    if game_over then 
-        return
-    end
-
     snake.did_grow = true -- temporarily hard coded to grow indefinitely
     snake:move()
+
+    result = snake:checkCollisionSelf()
+    if result then
+        game_over = true
+    end
 end
 
 function CheckKeyboard()

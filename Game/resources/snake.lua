@@ -36,6 +36,22 @@ function snake:lookRight()
     self.direction = { x = 1, y = 0 }
 end
 
+function snake:checkCollisionSelf()
+    local head = Body:getBack()
+    local collision = false
+    Body:iterate(function(segment, index)
+        if index == Body.last then
+            return
+        end
+
+        if segment.x == head.x and segment.y == head.y then
+            print("collision! GAME OVER")
+            collision = true  -- Collision with body
+        end
+    end)
+    return collision  -- Return true if a collision is detected, otherwise false
+end
+
 function snake:getBody()
     return Body
 end
