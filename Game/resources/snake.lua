@@ -28,16 +28,24 @@ function snake:move()
 end
 
 function snake:lookUp()
-    self.direction = { x = 0, y = -1 }
+    if not self.direction.y == 1 then
+        self.direction = { x = 0, y = -1 }
+    end
 end
 function snake:lookDown()
-    self.direction = { x = 0, y = 1 }
+    if not self.direction.y == -1 then
+        self.direction = { x = 0, y = 1 }
+    end
 end
 function snake:lookLeft()
-    self.direction = { x = -1, y = 0 }
+    if not self.direction.x == 1 then
+        self.direction = { x = -1, y = 0 }
+    end
 end
 function snake:lookRight()
-    self.direction = { x = 1, y = 0 }
+    if not self.direction.x == -1 then
+        self.direction = { x = 1, y = 0 }
+    end
 end
 
 function snake:checkCollision(config)
