@@ -101,17 +101,31 @@ function CheckKeyboard()
         return
     end
 
+    result = false
+
     if game_engine:IsKeyDown(keybinds.moveUp) then
-        snake:lookUp()
+        result = snake:lookUp()
+        if result then
+            return 
+        end
     end
     if game_engine:IsKeyDown(keybinds.moveDown) then
-        snake:lookDown()
+        result = snake:lookDown()
+         if result then
+            return 
+        end
     end
     if game_engine:IsKeyDown(keybinds.moveLeft) then
-        snake:lookLeft()
+        result = snake:lookLeft()
+        if result then
+            return 
+        end
     end
     if game_engine:IsKeyDown(keybinds.moveRight) then
-        snake:lookRight()
+        result = snake:lookRight()
+        if result then
+            return 
+        end
     end
 end
 

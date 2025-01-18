@@ -41,37 +41,41 @@ function snake:move()
     end        
 end
 
--- @return void
+-- @return boolean True if direction changed
 -- Change the snake's direction to look up (towards negative Y axis)
 function snake:lookUp()
     if self.direction.y == 1 then
-        return
+        return false
     end
     self.direction = { x = 0, y = -1 }
+    return true
 end
--- @return void
+-- @return boolean True if direction changed
 -- Change the snake's direction to look down (towards positive Y axis)
 function snake:lookDown()
     if self.direction.y == -1 then
-        return
+        return false
     end
     self.direction = { x = 0, y = 1 }
+    return true
 end
--- @return void
+-- @return boolean True if direction changed
 -- Change the snake's direction to look left (towards negative X axis)
 function snake:lookLeft()
     if self.direction.x == 1 then
-        return
+        return false
     end
     self.direction = { x = -1, y = 0 }
+    return true
 end
--- @return void
+-- @return boolean True if direction changed
 -- Change the snake's direction to look right (towards positive X axis)
 function snake:lookRight()
     if self.direction.x == -1 then
-        return
+        return false
     end
     self.direction = { x = 1, y = 0 }
+    return true
 end
 
 -- @param config table The game configuration, used for checking boundaries
