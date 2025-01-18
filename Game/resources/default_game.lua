@@ -20,6 +20,12 @@ game_engine:SetFrameRate(config.frame_rate)
 -- Gameplay variables
 local game_over = false
 
+local function Start_Game()
+    snake:init()
+end
+
+Start_Game()
+
 -- Functions called by the engine
 function Tick()
     snake:move()
@@ -44,8 +50,9 @@ function Paint(r)
     local window_bottom = r.bottom
     game_engine:SetColor(255)
 
+    local body = snake:getBody()
     -- Draw the snake
-    for _, segment in ipairs(snake.body) do
+    body:iterate(function(segment)
         local rect = { 
             left = window_left + segment.x * config.grid_size + 1, 
             top = window_top + segment.y * config.grid_size + 1, 
@@ -53,7 +60,7 @@ function Paint(r)
             bottom = window_top + (segment.y + 1) * config.grid_size - 2
         }
         game_engine:FillRect(rect)
-    end
+    end)
 end
 
 function KeyPressed(key)

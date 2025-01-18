@@ -1,34 +1,31 @@
 -- snake.lua
 
+local Body = require("queue")
 local snake = {
-    body = { 
-        { x = 5, y = 5 } 
-    }, 
     direction = { x = 1, y = 0 }, 
-    growing = false
+    did_grow = false
 }
 
+function snake:init()
+   print("snake init")
+   Body:enqueue({x = 5, y = 5})  -- Enqueue the initial position
+end
+
 function snake:move()
-    if not growing then
-        print("Body before move:")
-        for _, segment in ipairs(self.body) do
-            print(segment.x, segment.y)
-        end    
-        print()
-    
-        print("Adding new head\n");
-        -- new head: 
-        self.body[#self.body+1] = { x = self.body[1].x + self.direction.x, y = self.body[1].y + self.direction.y }
+    -- new head: 
+    local old_head = Body:getBack()
+    Body:enqueue({ x = old_head.x + self.direction.x, y = old_head.y + self.direction.y})
 
-        print("Body after move:")
-        for _, segment in ipairs(self.body) do
-            print(segment.x, segment.y)
-        end   
+   -- if not self.did_grow then
+    Body:dequeue()
+    -- end
+        
+    self.did_grow = false
 
-        growing = true
+end
 
-        print()
-    end
+function snake:getBody()
+    return Body
 end
 
 return snake
