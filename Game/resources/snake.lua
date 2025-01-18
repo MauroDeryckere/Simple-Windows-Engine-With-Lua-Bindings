@@ -3,7 +3,8 @@
 local Body = require("queue")
 local snake = {
     direction = { x = 1, y = 0 }, 
-    did_grow = false
+    did_grow = false,
+    score = 0
 }
 
 function snake:init()
@@ -18,9 +19,12 @@ function snake:move()
 
     if not self.did_grow then
         Body:dequeue() -- remove tail if we did not grow this game frame
+    else
+        self.score = self.score + 100
+        print(self.score)
+        self.did_grow = false
     end
         
-    self.did_grow = false
 end
 
 function snake:lookUp()
@@ -43,7 +47,7 @@ function snake:checkCollision(config)
         if index == Body.last then
             return
         end
-        if (segment.x == head.x and segment.y == head.y) or (segment.x < 0 or segment.x > config.hor_cells or segment.y < 0 or segment.y > config.ver_cells) then
+        if (segment.x == head.x and segment.y == head.y) or (segment.x < 0 or segment.x > config.hor_cells - 1 or segment.y < 0 or segment.y > config.ver_cells - 1) then
             print("collision! GAME OVER")
             collision = true  -- Collision with body
         end

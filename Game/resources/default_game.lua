@@ -26,6 +26,7 @@ local is_paused = false
 
 local function Start_Game()
     snake:init()
+    food:init(config)
 end
 
 Start_Game()
@@ -49,12 +50,19 @@ function Tick()
         return
     end
 
-    snake.did_grow = true -- temporarily hard coded to grow indefinitely
+    local body = snake:getBody()
+    local head = body:getBack()
+    if food.position.x == head.x and food.position.y == head.y then
+        snake.did_grow = true
+        food:spawn()
+    end
+
     snake:move()
 
     result = snake:checkCollision(config)
     if result then
         game_over = true
+        return
     end
 end
 
@@ -90,6 +98,7 @@ function Paint(r)
     local LIGHT_RED =  makeColor(100, 10, 10)
     local GREEN = makeColor(30, 200, 10)
     local BROWN = makeColor(165, 42, 42)
+    local BLUE = makeColor(10, 20, 200)
     
     -- Clear sreen
     game_engine:SetColor(0)
@@ -136,6 +145,18 @@ function Paint(r)
         end
         game_engine:FillRect(rect)
     end)
+
+    -- Draw the food
+    if food.position.x > -1 then
+        game_engine:SetColor(BLUE)
+        local oval = { 
+            left = window_left + food.position.x * config.grid_size + 1, 
+            top = window_top + food.position.y * config.grid_size + 1, 
+            right = window_left + (food.position.x + 1) * config.grid_size - 2, 
+            bottom = window_top + (food.position.y + 1) * config.grid_size - 2
+        }
+        game_engine:FillOval(oval)
+    end
 end
 
 function KeyPressed(key)

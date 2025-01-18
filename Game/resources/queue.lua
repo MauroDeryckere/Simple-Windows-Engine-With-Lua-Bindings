@@ -35,7 +35,7 @@ function Queue:getFront()
     end
 end
 
--- getBack: Get the bacl element without modifying it
+-- getBack: Get the back element without modifying it
 function Queue:getBack()
     if self.first < self.last then
         return self.items[self.last]
