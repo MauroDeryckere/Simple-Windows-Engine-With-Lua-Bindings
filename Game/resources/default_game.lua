@@ -47,7 +47,10 @@ Start_Game()
 -- @return void
 -- Called to rerstart game after game over
 local function rerstart_game()
-
+    frame_ct = 0
+    game_over = false
+    is_paused = false
+    Start_Game()
 end
 
 -- Functions called by the engine
@@ -191,10 +194,23 @@ function Paint(r)
 
     -- Game over display
     if game_over then
+        local _text = "GAME OVER"
+        local _string_x = math.floor((config.screen_width - 9 * 25) / 2)
+        local _string_y = math.floor((config.screen_height - 400) / 2)
         local stringInfo = { 
-            text = "GAME OVER",
-            string_x = 2,
-            string_y = config.screen_height / 2
+            text = _text,
+            string_x = _string_x,
+            string_y = _string_y
+        }
+        game_engine:DrawString(stringInfo)
+
+        _text = "Press space to play again"
+        _string_x = math.floor((config.screen_width - 25 * 18) / 2)
+        _string_y = math.floor((config.screen_height - 300) / 2)
+        stringInfo = { 
+            text = _text,
+            string_x = _string_x,
+            string_y = _string_y
         }
         game_engine:DrawString(stringInfo)
     end
@@ -209,9 +225,8 @@ function KeyPressed(key)
 
     if key == string.char(keybinds.pause) then
         if game_over then
-            game_over = false
             print("RERSTARTING THE GAME! ")
-            restart_game()
+            rerstart_game()
         else
             if is_paused then
                 is_paused = false

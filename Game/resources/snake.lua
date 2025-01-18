@@ -18,7 +18,11 @@ local snake = {
 -- Initialize the snake, setting its initial position (adding it to the queue)
 function snake:init()
    print("snake init")
+   Body:clear()
    Body:enqueue({x = 5, y = 5})  -- Enqueue the initial position
+   self.did_grow = false
+   self.score = 0
+   self.direction = { x = 1, y = 0 }
 end
 
 -- @return void

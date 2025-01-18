@@ -11,6 +11,7 @@ local food = {
 -- @param _config table The game config data, must include hor_cells and ver_cells fields
 -- @return void
 function food:init(_config)
+	self.position = { x = 6, y = 6 }
 	self.config = _config
 end
 

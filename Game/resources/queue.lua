@@ -68,4 +68,12 @@ function Queue:iterate(func)
     end
 end
 
+-- @return void 
+-- Clears all elements from the queue
+function Queue:clear()
+    self.first = 0
+    self.last = 0
+    self.items = {}
+end
+
 return Queue
